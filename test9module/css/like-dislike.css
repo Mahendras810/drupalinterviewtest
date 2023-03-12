@@ -1,0 +1,8 @@
+.article-like-dislike .article-like-dislike-wrapper a {
+  margin-right: 20px;
+  color: gray;
+}
+
+.article-like-dislike .article-like-dislike-wrapper a.active {
+  color: #0d77b5;
+}

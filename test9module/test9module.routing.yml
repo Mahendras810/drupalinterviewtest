@@ -1,0 +1,29 @@
+test9module.mypage:
+  path: '/my-page'
+  defaults:
+    _controller: '\Drupal\test9module\Controller\MyController::content'
+  requirements:
+    _permission: 'access content'
+
+#  testmodule.myform:
+#   path: '/myform'
+#   defaults:
+#     _form: '\Drupal\test9module\Form\MyForm'
+#   requirements:
+#     _permission: 'access content'
+
+test9module.myform:
+  path: '/my-form'
+  defaults:
+    _form: '\Drupal\test9module\Form\MyForm'
+  requirements:
+    _permission: 'access content'
+
+article_like_dislike:
+  path: '/article-like-dislike/{nid}/{type}'
+  defaults:
+    _controller: '\Drupal\test9module\Controller\ArticleLikeDislikeController::likeDislike'
+  requirements:
+    _permission: 'access content'
+    _role: 'authenticated'
+    _methods: 'POST'

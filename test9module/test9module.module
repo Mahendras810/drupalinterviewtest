@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function test9module_preprocess_page(&$variables) {
+  $current_user_roles = \Drupal::currentUser()->getRoles();
+  // Add a class to make Like/Dislike Accessible to Authenticate User Only.
+  if (!empty($current_user_roles) && in_array('authenticated', $current_user_roles)) {
+    $variables['#attached']['library'][] = 'test9module/articlelikedislike';
+  }
+}
+
+/**
+ * Implements hook_preprocess_node()..
+ */
+function test9module_preprocess_node(&$variables) {
+  $current_user = \Drupal::currentUser();
+  $current_user_roles = $current_user->getRoles();
+  $uid = $current_user->id();
+  // Add a class to make Like/Dislike Accessible to Authenticate User Only.
+  if (!empty($current_user_roles) && in_array('authenticated', $current_user_roles)) {
+    // Get Current Node Id.
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (!empty($node)) {
+      // Add like/Dislike to article type only.
+      if ($node->getType() == 'article') {
+        \Drupal::service("page_cache_kill_switch")->trigger();
+        // Get the Like Count on reload.
+        $like_dislike_paragraphs = $node->get('field_like_dislike')->referencedEntities();
+        $like_count = 0;
+        $liked = FALSE;
+        $liked_status = FALSE;
+        if (!empty($like_dislike_paragraphs)) {
+          $liked_user_uid = $liked_value = '';
+          foreach ($like_dislike_paragraphs as $like_dislike_paragraph) {
+            $liked_user_uid = $like_dislike_paragraph->get('field_user')->target_id ?? 0;
+            $liked_value = $like_dislike_paragraph->get('field_like_dislike')->value ?? 'none';
+            //Check if User Liked or Disliked already.
+            if ($uid == $liked_user_uid) {
+              $liked = TRUE;
+              $liked_status = $liked_value;
+            }
+            // Like Counts.
+            if ($liked_value == 'like') {
+              $like_count++;
+            }
+            // Dislike Counts.
+            elseif ($liked_value == 'dislike') {
+              $dislike_count++;
+            }
+            $liked_by_uids[] = $liked_user_uid;
+            $liked_by_user_data[] = [
+              'uid' => $liked_user_uid ?? 0,
+              'paragraph_id' => $like_dislike_paragraph->id() ?? 0,
+              'value' => $liked_value,
+            ];
+          }
+        }
+        $like_class = 'article-like';
+        $dislike_class = 'article-dislike';
+        if ($liked_status) {
+          if ($liked_status == 'like') {
+            $like_class .= ' active';
+          }
+          else if ($liked_status == 'dislike') {
+            $dislike_class .= ' active';
+          }
+        }
+        $variables['attributes']['class'][] = 'article-like-dislike';
+        $variables['content']['#suffix'] = '<div class="article-like-dislike-wrapper"><a data-nid="' .$node->id(). '" data-type="like" class="' . $like_class . '" href=#>Like<span> ' . $like_count . '</span></a><a href="#" data-nid="' . $node->id() .'" data-type="dislike" class="' . $dislike_class. '">Dislike</a></div>';
+      }
+    }
+  }
+}

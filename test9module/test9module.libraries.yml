@@ -1,0 +1,16 @@
+myform:
+  js:
+    js/custom.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax
+
+articlelikedislike:
+  css:
+    theme:
+      css/like-dislike.css: {}
+  js:
+    js/likedislike.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal.ajax

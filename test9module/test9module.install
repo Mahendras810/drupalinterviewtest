@@ -1,0 +1,191 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+function test9module_schema() {
+    $schema['salesman'] = [
+      'description' => 'A table to store Salesman data',
+      'fields' => [
+        'salesman_id' => [
+          'description' => 'Salesman Id',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'name' => [
+          'description' => 'Name',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+        'city' => [
+          'description' => 'City',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+        'commission' => [
+          'description' => 'Commission',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['salesman_id'],
+    ];
+
+    $schema['customer'] = [
+      'description' => 'A table to store Customer data',
+      'fields' => [
+        'customer_id' => [
+          'description' => 'Salesman Id',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'cust_name' => [
+          'description' => 'Name',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+        'city' => [
+          'description' => 'City',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+        'grade' => [
+          'description' => 'Commission',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+        'salesman_id' => [
+          'description' => 'Commission',
+          'type' => 'varchar',
+          'length' => '50',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['customer_id'],
+    ];
+    return $schema;
+}
+
+/**
+ *  hook_install()
+ */
+function test9module_install() {
+  $values = [
+    [
+      'salesman_id' => 5001,
+      'name' => 'James Hoog',
+      'city' => 'New York',
+      'commission' => '0.15',
+    ],
+    [
+      'salesman_id' => 5002,
+      'name' => 'Nail Knite',
+      'city' => 'Paris',
+      'commission' => '0.13'
+    ],
+    [
+      'salesman_id' => 5005,
+      'name' => 'Pit Alex',
+      'city' => 'London',
+      'commission' => '0.11'
+    ],
+    [
+      'salesman_id' => 5006,
+      'name' => 'Mc Lyon',
+      'city' => 'Paris ',
+      'commission' => '0.14'
+    ],
+    [
+      'salesman_id' => 5007,
+      'name' => 'Paul Adam',
+      'city' => 'Rome',
+      'commission' => '0.13'
+    ],
+    [
+      'salesman_id' => 5003,
+      'name' => 'Lauson Hen',
+      'city' => 'San Jose',
+      'commission' => '0.12'
+    ],
+  ];
+  $database = \Drupal::database();
+  $query = $database->insert('salesman')->fields(['salesman_id', 'name', 'city', 'commission']);
+  foreach ($values as $developer) {
+    $query->values($developer);
+  }
+  $query->execute();
+
+    $values = [
+      [
+        'customer_id' => 3002,
+        'cust_name' => 'Nick Rimando ',
+        'city' => 'New York',
+        'grade' => 100,
+        'salesman_id' => '5001'
+      ],
+      [
+        'customer_id' => 3007,
+        'cust_name' => 'Brad Davis',
+        'city' => 'New York',
+        'grade' => 200,
+        'salesman_id' => '5001'
+      ],
+      [
+        'customer_id' => 3005,
+        'cust_name' => 'Graham Zusi',
+        'city' => 'California',
+        'grade' => 200,
+        'salesman_id' => '5002'
+      ],
+      [
+        'customer_id' => 3008,
+        'cust_name' => 'Julian Green',
+        'city' => 'London',
+        'grade' => 300,
+        'salesman_id' => '5002'
+      ],
+      [
+        'customer_id' => 3004,
+        'cust_name' => 'Fabian Johnson',
+        'city' => 'Paris',
+        'grade' => 300,
+        'salesman_id' => '5006'
+      ],
+      [
+        'customer_id' => 3009,
+        'cust_name' => 'Geoff Cameron',
+        'city' => 'Berlin',
+        'grade' => 100,
+        'salesman_id' => '5003'
+      ],
+      [
+        'customer_id' => 3003,
+        'cust_name' => 'Jozy Altidor',
+        'city' => 'Moscow',
+        'grade' => 200,
+        'salesman_id' => '5007'
+      ],
+      [
+        'customer_id' => 3001,
+        'cust_name' => 'Brad Guzan',
+        'city' => 'London',
+        'grade' => '',
+        'salesman_id' => '5005'
+      ],
+    ];
+    $database = \Drupal::database();
+    $query = $database->insert('customer')->fields(['customer_id', 'cust_name', 'city', 'grade', 'salesman_id']);
+    foreach ($values as $developer) {
+      $query->values($developer);
+    }
+    $query->execute();
+
+}

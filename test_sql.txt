@@ -1,0 +1,5 @@
+Here is SQL Questions Anwser:-
+
+SELECT customer.cust_name, salesman.name, salesman.city FROM salesman, customer WHERE salesman.city = customer.city ;
+
+SELECT * FROM orders WHERE purch_amt > (SELECT  AVG(purch_amt) FROM orders WHERE ord_date ='10/10/2012');
